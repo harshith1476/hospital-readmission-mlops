@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+readmission_model.pkl
+metrics.json
+hospital_clean.csv
+release_candidate/
