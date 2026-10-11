@@ -45,7 +45,7 @@ jobs:
         with:
           name: hospital-readmission-ml-artifacts
           path: |
-            readmission_model_missing.pkl
+            readmission_model.pkl
             metrics.json
             hospital_clean.csv
           if-no-files-found: error
