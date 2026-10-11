@@ -39,3 +39,14 @@ jobs:
 
       - name: Run automated ML tests
         run: python -m unittest test_ml_pipeline -v
+
+      - name: Upload validated ML artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hospital-readmission-ml-artifacts
+          path: |
+            readmission_model.pkl
+            metrics.json
+            hospital_clean.csv
+          if-no-files-found: error
+          retention-days: 7
