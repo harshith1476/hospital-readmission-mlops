@@ -1,4 +1,4 @@
-name: Hospital Readmission ML CI
+name: Hospital Readmission ML CI-CD
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  train-and-test:
+  train-test-deliver:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,13 +40,22 @@ jobs:
       - name: Run automated ML tests
         run: python -m unittest test_ml_pipeline -v
 
-      - name: Upload validated ML artifacts
+      - name: Run prediction application tests
+        run: python -m unittest test_app -v
+
+      - name: Prepare release candidate
+        run: |
+          mkdir -p release_candidate
+          cp app.py release_candidate/
+          cp readmission_model.pkl release_candidate/
+          cp metrics.json release_candidate/
+          cp requirements.txt release_candidate/
+          printf "Hospital Readmission Prediction ML Application\nRun: python app.py\nEndpoint: POST /predict\n" > release_candidate/DEPLOYMENT.txt
+
+      - name: Upload release candidate
         uses: actions/upload-artifact@v4
         with:
-          name: hospital-readmission-ml-artifacts
-          path: |
-            readmission_model.pkl
-            metrics.json
-            hospital_clean.csv
+          name: hospital-readmission-ml-release
+          path: release_candidate/
           if-no-files-found: error
           retention-days: 7
