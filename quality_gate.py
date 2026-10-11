@@ -2,7 +2,7 @@
 import json
 import sys
 
-MINIMUM_ACCURACY = 0.90  # majority-class baseline on this dataset is ~0.73
+MINIMUM_ACCURACY = 0.999  # majority-class baseline on this dataset is ~0.73
 
 print("Reading model evaluation metrics...")
 with open("metrics.json", "r") as file:
