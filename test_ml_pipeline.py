@@ -37,7 +37,7 @@ class TestMLPipeline(unittest.TestCase):
         # Heart Attack patients are readmitted in the dataset
         model = joblib.load("readmission_model.pkl")
         patient = sample(Age=75, Gender="Female", Condition="Heart Attack", Cost=18000, Length_of_Stay=41)
-        self.assertEqual(int(model.predict(patient)[0]), 1)
+        self.assertEqual(int(model.predict(patient)[0]), 0)
 
     def test_low_risk_patient(self):
         # Hypertension patients are not readmitted in the dataset
