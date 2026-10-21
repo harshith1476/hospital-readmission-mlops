@@ -1,0 +1,89 @@
+name: Build, Test and Publish Hospital Readmission ML
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: hospital-readmission-ml
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train readmission model
+        run: python train_model.py
+
+      - name: Check ML quality gate
+        run: python quality_gate.py
+
+      - name: Run automated tests
+        run: python -m unittest discover -v
+
+      - name: Build Docker image
+        run: docker build -t $IMAGE_NAME:ci .
+
+      - name: Run container for health test
+        run: docker run -d --name hospital-readmission-ci -p 5000:5000 $IMAGE_NAME:ci
+
+      - name: Wait for application health check
+        run: |
+          for i in {1..20}; do
+            if curl --fail --silent http://localhost:5000/health; then
+              echo ""
+              echo "Application is healthy."
+              exit 0
+            fi
+            echo "Waiting for application... attempt $i"
+            sleep 3
+          done
+          docker logs hospital-readmission-ci
+          exit 1
+
+      - name: Test prediction endpoint
+        run: |
+          response=$(curl --fail --silent --show-error -X POST \
+            -H "Content-Type: application/json" \
+            -d @test_payload.json http://localhost:5000/predict)
+          echo "Prediction response: $response"
+          echo "$response" | grep -q '"prediction":"Yes"'
+
+      - name: Show container logs and stop container
+        if: always()
+        run: |
+          docker logs hospital-readmission-ci || true
+          docker rm -f hospital-readmission-ci || true
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Tag image for GHCR
+        run: |
+          IMAGE_ID=$(echo "${REGISTRY}/${{ github.repository_owner }}/${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
+          docker tag $IMAGE_NAME:ci $IMAGE_ID:latest
+          docker tag $IMAGE_NAME:ci $IMAGE_ID:sha-${{ github.sha }}
+
+      - name: Push image to GHCR
+        run: |
+          docker push $IMAGE_ID:latest
+          docker push $IMAGE_ID:sha-${{ github.sha }}

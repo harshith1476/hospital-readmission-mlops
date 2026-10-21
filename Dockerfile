@@ -9,6 +9,7 @@ COPY app.py .
 COPY readmission_model.pkl .
 COPY metrics.json .
 
+ENV PORT=5000
 EXPOSE 5000
 
 CMD ["python", "app.py"]

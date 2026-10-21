@@ -1,4 +1,5 @@
-"""Practical 5: Flask API exposing the trained readmission model."""
+"""Practicals 8-10 version of the Flask API (no logging). Practical 11 adds logging in app.py."""
+import os
 from pathlib import Path
 
 import joblib
@@ -6,6 +7,7 @@ import pandas as pd
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+APP_VERSION = "1.0"
 
 MODEL_PATH = Path("readmission_model.pkl")
 FEATURES = ["Age", "Gender", "Condition", "Cost", "Length_of_Stay"]
@@ -26,7 +28,7 @@ def load_model():
 
 
 def health():
-    return jsonify({"status": "ok", "service": "hospital-readmission-prediction"})
+    return jsonify({"status": "ok", "service": "hospital-readmission-prediction", "version": APP_VERSION})
 
 
 # Practical 5 checks "/", Practical 7 checks "/health" - both are served.
@@ -63,4 +65,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))
