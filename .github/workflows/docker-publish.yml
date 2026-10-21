@@ -67,6 +67,16 @@ jobs:
           echo "Prediction response: $response"
           echo "$response" | grep -q '"prediction":"Yes"'
 
+      - name: Test validation error and missing route (Practical 11 log checks)
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{"Age": "abc"}' http://localhost:5000/predict)
+          test "$code" = "400"
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/not-a-real-route)
+          test "$code" = "404"
+          docker logs hospital-readmission-ci 2>&1 | grep -q "event=model_loaded"
+          docker logs hospital-readmission-ci 2>&1 | grep -q "event=validation_error"
+          docker logs hospital-readmission-ci 2>&1 | grep -q "status=404"
+
       - name: Show container logs and stop container
         if: always()
         run: |
