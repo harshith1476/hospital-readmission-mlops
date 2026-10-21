@@ -7,7 +7,7 @@ import pandas as pd
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-APP_VERSION = "1.0"
+APP_VERSION = "1.0-render-update"
 
 MODEL_PATH = Path("readmission_model.pkl")
 FEATURES = ["Age", "Gender", "Condition", "Cost", "Length_of_Stay"]
