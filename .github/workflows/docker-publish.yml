@@ -48,7 +48,7 @@ jobs:
       - name: Wait for application health check
         run: |
           for i in {1..20}; do
-            if curl --fail --silent http://localhost:5000/health; then
+            if curl --fail --silent http://localhost:5001/health; then
               echo ""
               echo "Application is healthy."
               exit 0
