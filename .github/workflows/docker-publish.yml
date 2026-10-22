@@ -28,7 +28,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-drift.txt
 
       - name: Train readmission model
         run: python train_model.py
@@ -76,6 +76,11 @@ jobs:
           docker logs hospital-readmission-ci 2>&1 | grep -q "event=model_loaded"
           docker logs hospital-readmission-ci 2>&1 | grep -q "event=validation_error"
           docker logs hospital-readmission-ci 2>&1 | grep -q "status=404"
+
+      - name: Test Prometheus metrics endpoint (Practical 12)
+        run: |
+          curl --fail --silent http://localhost:5000/metrics | grep -q "hospital_api_model_loaded 1.0"
+          curl --fail --silent http://localhost:5000/metrics | grep -q "hospital_api_http_requests_total"
 
       - name: Show container logs and stop container
         if: always()

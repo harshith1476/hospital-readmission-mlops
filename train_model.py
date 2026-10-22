@@ -26,8 +26,15 @@ FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 TARGET = "Readmission"  # Yes / No  -> 1 / 0
 
 
+RECENT_BATCH_PATH = Path("data/recent_labeled_batch.csv")  # Practical 15: optional approved recent labels
+
+
 def load_dataset():
     data = pd.read_csv(DATA_PATH)
+    if RECENT_BATCH_PATH.exists():
+        recent = pd.read_csv(RECENT_BATCH_PATH)
+        print("Including recent labeled batch:", len(recent), "rows")
+        data = pd.concat([data, recent[FEATURES + [TARGET]]], ignore_index=True)
     data = data.drop_duplicates().dropna(subset=FEATURES + [TARGET])
     data["readmitted"] = (data[TARGET] == "Yes").astype(int)
     return data

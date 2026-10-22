@@ -1,0 +1,31 @@
+groups:
+  - name: hospital-readmission-api-alerts
+    rules:
+      # Safe classroom demo: send a few invalid requests (HTTP 400) and watch it go pending -> firing.
+      - alert: HospitalAPIClientErrors
+        expr: sum(rate(hospital_api_http_requests_total{status=~"4.."}[2m])) > 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hospital Readmission API is receiving client errors"
+          description: "4xx responses have been observed during the recent window."
+
+      # Production-style availability rule. Normally stays inactive while the target is UP.
+      - alert: HospitalAPIDown
+        expr: up{job="hospital-readmission-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Hospital Readmission API monitoring target is down"
+          description: "Prometheus cannot scrape the deployed API."
+
+      - alert: HospitalModelNotLoaded
+        expr: hospital_api_model_loaded == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Readmission model is not loaded"
+          description: "The API is running but the model file failed to load."
