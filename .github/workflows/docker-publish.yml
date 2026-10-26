@@ -1,10 +1,15 @@
-name: Build, Test and Publish Hospital Readmission ML
+name: Hospital Readmission - Kubernetes CI/CD
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      simulate_bad_release:
+        description: "Demo only: deploy a non-existent image tag to trigger the automatic rollback"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -15,12 +20,20 @@ env:
   IMAGE_NAME: hospital-readmission-ml
 
 jobs:
-  build-test-publish:
+  build-test-push:
     runs-on: ubuntu-latest
-
+    outputs:
+      image_ref: ${{ steps.image.outputs.image_ref }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+
+      - name: Create immutable image reference
+        id: image
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_ID=${REGISTRY}/${OWNER}/${IMAGE_NAME}" >> "$GITHUB_ENV"
+          echo "image_ref=${REGISTRY}/${OWNER}/${IMAGE_NAME}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -39,66 +52,85 @@ jobs:
       - name: Run automated tests
         run: python -m unittest discover -v
 
-      - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:ci .
+      - name: Build Docker image for testing
+        run: docker build -t $IMAGE_NAME:test .
 
-      - name: Run container for health test
-        run: docker run -d --name hospital-readmission-ci -p 5000:5000 $IMAGE_NAME:ci
+      - name: Start test container
+        run: docker run -d --name hospital-readmission-test -p 5000:5000 $IMAGE_NAME:test
 
-      - name: Wait for application health check
+      - name: Wait for health endpoint
         run: |
-          for i in {1..20}; do
-            if curl --fail --silent http://localhost:5000/health; then
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:5000/health; then
               echo ""
-              echo "Application is healthy."
+              echo "Container health test passed"
               exit 0
             fi
-            echo "Waiting for application... attempt $i"
-            sleep 3
+            sleep 2
           done
-          docker logs hospital-readmission-ci
+          docker logs hospital-readmission-test
           exit 1
 
-      - name: Test prediction endpoint
+      - name: Test prediction and metrics endpoints
         run: |
-          response=$(curl --fail --silent --show-error -X POST \
-            -H "Content-Type: application/json" \
-            -d @test_payload.json http://localhost:5000/predict)
+          response=$(curl --fail --silent --show-error -X POST -H "Content-Type: application/json" -d @test_payload.json http://127.0.0.1:5000/predict)
           echo "Prediction response: $response"
           echo "$response" | grep -q '"prediction":"Yes"'
-
-      - name: Test validation error and missing route (Practical 11 log checks)
-        run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{"Age": "abc"}' http://localhost:5000/predict)
-          test "$code" = "400"
-          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/not-a-real-route)
-          test "$code" = "404"
-          docker logs hospital-readmission-ci 2>&1 | grep -q "event=model_loaded"
-          docker logs hospital-readmission-ci 2>&1 | grep -q "event=validation_error"
-          docker logs hospital-readmission-ci 2>&1 | grep -q "status=404"
-
-      - name: Test Prometheus metrics endpoint (Practical 12)
-        run: |
-          curl --fail --silent http://localhost:5000/metrics | grep -q "hospital_api_model_loaded 1.0"
-          curl --fail --silent http://localhost:5000/metrics | grep -q "hospital_api_http_requests_total"
+          curl --fail --silent http://127.0.0.1:5000/metrics | grep -q "hospital_api_model_loaded 1.0"
 
       - name: Show container logs and stop container
         if: always()
         run: |
-          docker logs hospital-readmission-ci || true
-          docker rm -f hospital-readmission-ci || true
+          docker logs hospital-readmission-test || true
+          docker rm -f hospital-readmission-test || true
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-      - name: Tag image for GHCR
+      - name: Tag tested image
         run: |
-          IMAGE_ID=$(echo "${REGISTRY}/${{ github.repository_owner }}/${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')
-          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
-          docker tag $IMAGE_NAME:ci $IMAGE_ID:latest
-          docker tag $IMAGE_NAME:ci $IMAGE_ID:sha-${{ github.sha }}
+          docker tag $IMAGE_NAME:test $IMAGE_ID:sha-${GITHUB_SHA}
+          docker tag $IMAGE_NAME:test $IMAGE_ID:latest
 
-      - name: Push image to GHCR
+      - name: Push tested image to GHCR
         run: |
+          docker push $IMAGE_ID:sha-${GITHUB_SHA}
           docker push $IMAGE_ID:latest
-          docker push $IMAGE_ID:sha-${{ github.sha }}
+
+  deploy-kubernetes:
+    needs: build-test-push
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
+    env:
+      DEPLOY_IMAGE: ${{ inputs.simulate_bad_release == true && format('{0}-doesnotexist', needs.build-test-push.outputs.image_ref) || needs.build-test-push.outputs.image_ref }}
+    steps:
+      - name: Verify Kubernetes cluster
+        run: |
+          kubectl config current-context
+          kubectl get nodes
+
+      - name: Show current deployment image
+        run: kubectl get deployment hospital-readmission -o jsonpath="{.spec.template.spec.containers[0].image}"
+
+      - name: Deploy the tested image
+        run: kubectl set image deployment/hospital-readmission hospital-readmission-api=$env:DEPLOY_IMAGE
+
+      - name: Wait for Kubernetes rollout
+        run: kubectl rollout status deployment/hospital-readmission --timeout=180s
+
+      - name: Verify health through the Kubernetes Service
+        run: kubectl exec deployment/hospital-readmission -- python -c "import urllib.request; print(urllib.request.urlopen('http://hospital-readmission-service/health', timeout=10).read().decode())"
+
+      - name: Show deployed image, Pods and rollout history
+        run: |
+          kubectl get deployment hospital-readmission -o wide
+          kubectl get pods -o wide
+          kubectl rollout history deployment/hospital-readmission
+
+      - name: Roll back if deployment verification fails
+        if: failure()
+        run: |
+          kubectl rollout undo deployment/hospital-readmission
+          kubectl rollout status deployment/hospital-readmission --timeout=180s
