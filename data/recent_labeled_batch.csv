@@ -1,0 +1,201 @@
+Age,Cost,Length_of_Stay,Gender,Condition,Readmission
+64,25000,74,Female,Cancer,Yes
+45,500,42,Female,Fractured Arm,Yes
+63,25000,80,Female,Cancer,Yes
+65,25000,67,Female,Cancer,No
+40,500,19,Female,Fractured Arm,No
+89,10000,85,Male,Stroke,No
+88,18000,71,Female,Heart Attack,Yes
+66,25000,74,Female,Cancer,No
+53,8000,25,Female,Appendicitis,No
+70,4000,46,Female,Osteoarthritis,No
+87,18000,44,Female,Heart Attack,Yes
+57,15000,80,Female,Heart Disease,Yes
+87,18000,60,Female,Heart Attack,Yes
+75,4000,70,Female,Osteoarthritis,No
+64,25000,50,Female,Cancer,Yes
+71,2000,28,Male,Diabetes,No
+62,800,49,Female,Respiratory Infection,No
+40,500,18,Female,Fractured Arm,No
+88,10000,75,Male,Stroke,No
+71,4000,58,Female,Osteoarthritis,No
+66,25000,73,Female,Cancer,No
+71,8000,40,Female,Appendicitis,Yes
+65,6000,80,Male,Kidney Stones,No
+84,18000,80,Female,Heart Attack,Yes
+38,100,64,Male,Allergic Reaction,No
+65,15000,29,Female,Heart Disease,Yes
+65,15000,47,Female,Heart Disease,Yes
+61,800,15,Female,Respiratory Infection,No
+80,10000,28,Male,Stroke,Yes
+63,25000,67,Female,Cancer,Yes
+58,3000,68,Male,Fractured Leg,No
+90,18000,86,Female,Heart Attack,Yes
+84,18000,40,Female,Heart Attack,Yes
+88,18000,44,Female,Heart Attack,Yes
+87,10000,50,Male,Stroke,No
+87,18000,32,Female,Heart Attack,Yes
+88,18000,28,Female,Heart Attack,Yes
+56,3000,47,Male,Fractured Leg,No
+64,15000,33,Female,Heart Disease,Yes
+87,18000,63,Female,Heart Attack,Yes
+63,15000,45,Female,Heart Disease,Yes
+70,8000,72,Female,Appendicitis,Yes
+87,18000,65,Female,Heart Attack,Yes
+87,18000,40,Female,Heart Attack,Yes
+62,25000,77,Female,Cancer,Yes
+85,18000,73,Female,Heart Attack,Yes
+83,18000,45,Female,Heart Attack,Yes
+87,10000,39,Male,Stroke,No
+65,25000,67,Female,Cancer,Yes
+87,10000,27,Male,Stroke,No
+87,10000,33,Male,Stroke,No
+62,25000,22,Female,Cancer,No
+81,1000,69,Male,Hypertension,No
+79,10000,64,Male,Stroke,Yes
+65,15000,64,Female,Heart Disease,Yes
+58,15000,69,Female,Heart Disease,Yes
+67,25000,54,Female,Cancer,No
+84,18000,59,Female,Heart Attack,Yes
+88,10000,28,Male,Stroke,No
+64,25000,29,Female,Cancer,Yes
+65,25000,67,Female,Cancer,No
+88,10000,50,Male,Stroke,No
+63,25000,59,Female,Cancer,Yes
+74,4000,67,Female,Osteoarthritis,No
+75,2000,57,Male,Diabetes,No
+88,18000,55,Female,Heart Attack,Yes
+72,2000,50,Male,Diabetes,No
+79,10000,37,Male,Stroke,Yes
+58,15000,18,Female,Heart Disease,Yes
+66,15000,46,Female,Heart Disease,Yes
+80,10000,33,Male,Stroke,Yes
+72,2000,44,Male,Diabetes,No
+65,15000,75,Female,Heart Disease,Yes
+70,8000,30,Female,Appendicitis,Yes
+84,18000,23,Female,Heart Attack,Yes
+88,18000,38,Female,Heart Attack,Yes
+63,25000,41,Female,Cancer,Yes
+72,4000,60,Female,Osteoarthritis,No
+67,15000,55,Female,Heart Disease,Yes
+40,500,65,Female,Fractured Arm,No
+79,10000,65,Male,Stroke,Yes
+64,15000,43,Female,Heart Disease,Yes
+81,10000,74,Male,Stroke,Yes
+72,2000,29,Male,Diabetes,No
+63,25000,23,Female,Cancer,Yes
+58,6000,22,Male,Kidney Stones,No
+59,15000,65,Female,Heart Disease,Yes
+88,18000,51,Female,Heart Attack,Yes
+87,18000,30,Female,Heart Attack,Yes
+88,10000,53,Male,Stroke,No
+80,10000,28,Male,Stroke,Yes
+65,25000,68,Female,Cancer,No
+85,18000,48,Female,Heart Attack,Yes
+88,10000,46,Male,Stroke,No
+58,15000,38,Female,Heart Disease,Yes
+62,800,55,Female,Respiratory Infection,No
+59,15000,41,Female,Heart Disease,Yes
+82,18000,25,Female,Heart Attack,Yes
+85,18000,27,Female,Heart Attack,Yes
+80,10000,85,Male,Stroke,Yes
+88,18000,78,Female,Heart Attack,Yes
+50,3000,64,Male,Fractured Leg,No
+83,18000,35,Female,Heart Attack,Yes
+88,18000,83,Female,Heart Attack,Yes
+64,800,66,Female,Respiratory Infection,No
+83,18000,68,Female,Heart Attack,Yes
+78,20000,49,Male,Prostate Cancer,No
+58,15000,33,Female,Heart Disease,Yes
+80,10000,22,Male,Stroke,Yes
+64,25000,81,Female,Cancer,No
+80,10000,52,Male,Stroke,Yes
+64,25000,35,Female,Cancer,Yes
+66,25000,41,Female,Cancer,No
+67,25000,60,Female,Cancer,No
+86,18000,29,Female,Heart Attack,Yes
+88,10000,77,Male,Stroke,No
+67,25000,72,Female,Cancer,No
+60,6000,63,Male,Kidney Stones,No
+89,18000,49,Female,Heart Attack,Yes
+85,18000,61,Female,Heart Attack,Yes
+88,18000,59,Female,Heart Attack,Yes
+71,2000,57,Male,Diabetes,No
+64,25000,28,Female,Cancer,Yes
+84,18000,49,Female,Heart Attack,Yes
+89,18000,21,Female,Heart Attack,Yes
+35,100,44,Male,Allergic Reaction,No
+59,15000,40,Female,Heart Disease,Yes
+86,18000,29,Female,Heart Attack,Yes
+90,18000,27,Female,Heart Attack,Yes
+66,15000,56,Female,Heart Disease,Yes
+61,25000,34,Female,Cancer,Yes
+77,20000,82,Male,Prostate Cancer,No
+54,8000,56,Female,Appendicitis,No
+64,15000,42,Female,Heart Disease,Yes
+90,10000,59,Male,Stroke,No
+64,25000,22,Female,Cancer,Yes
+57,15000,81,Female,Heart Disease,Yes
+57,15000,49,Female,Heart Disease,Yes
+58,15000,67,Female,Heart Disease,Yes
+62,25000,28,Female,Cancer,Yes
+79,10000,51,Male,Stroke,Yes
+50,3000,51,Male,Fractured Leg,No
+89,18000,80,Female,Heart Attack,Yes
+59,15000,54,Female,Heart Disease,Yes
+61,25000,51,Female,Cancer,Yes
+85,18000,36,Female,Heart Attack,Yes
+58,15000,39,Female,Heart Disease,Yes
+55,8000,50,Female,Appendicitis,No
+47,500,42,Female,Fractured Arm,Yes
+61,25000,23,Female,Cancer,Yes
+44,500,68,Female,Fractured Arm,Yes
+71,4000,75,Female,Osteoarthritis,No
+61,25000,32,Female,Cancer,Yes
+36,100,50,Male,Allergic Reaction,No
+65,15000,24,Female,Heart Disease,Yes
+89,18000,65,Female,Heart Attack,Yes
+87,18000,38,Female,Heart Attack,Yes
+86,18000,65,Female,Heart Attack,Yes
+66,25000,70,Female,Cancer,No
+45,500,64,Female,Fractured Arm,Yes
+65,15000,23,Female,Heart Disease,Yes
+88,10000,80,Male,Stroke,No
+87,10000,33,Male,Stroke,No
+65,25000,23,Female,Cancer,No
+68,20000,57,Male,Prostate Cancer,No
+88,18000,44,Female,Heart Attack,Yes
+64,25000,77,Female,Cancer,Yes
+57,15000,70,Female,Heart Disease,Yes
+65,15000,39,Female,Heart Disease,Yes
+86,18000,84,Female,Heart Attack,Yes
+87,10000,38,Male,Stroke,No
+79,10000,53,Male,Stroke,Yes
+65,15000,35,Female,Heart Disease,Yes
+56,8000,80,Female,Appendicitis,No
+65,15000,27,Female,Heart Disease,Yes
+66,6000,18,Male,Kidney Stones,No
+76,4000,45,Female,Osteoarthritis,No
+81,10000,85,Male,Stroke,Yes
+86,18000,79,Female,Heart Attack,Yes
+79,20000,69,Male,Prostate Cancer,No
+70,8000,78,Female,Appendicitis,Yes
+83,18000,80,Female,Heart Attack,Yes
+67,25000,56,Female,Cancer,No
+65,15000,38,Female,Heart Disease,Yes
+63,25000,71,Female,Cancer,Yes
+61,6000,58,Male,Kidney Stones,No
+66,20000,45,Male,Prostate Cancer,No
+79,10000,24,Male,Stroke,Yes
+83,18000,70,Female,Heart Attack,Yes
+62,25000,41,Female,Cancer,Yes
+88,18000,81,Female,Heart Attack,Yes
+59,15000,32,Female,Heart Disease,Yes
+80,10000,27,Male,Stroke,Yes
+62,25000,79,Female,Cancer,Yes
+78,10000,28,Male,Stroke,Yes
+58,15000,29,Female,Heart Disease,Yes
+85,18000,61,Female,Heart Attack,Yes
+65,25000,78,Female,Cancer,No
+66,15000,29,Female,Heart Disease,Yes
+88,18000,40,Female,Heart Attack,Yes
