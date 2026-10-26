@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger("hospital-readmission-api")
 
 app = Flask(__name__)
-APP_VERSION = "1.2"
+APP_VERSION = "1.3-k8s-update"
 
 MODEL_PATH = Path("readmission_model.pkl")
 FEATURES = ["Age", "Gender", "Condition", "Cost", "Length_of_Stay"]
