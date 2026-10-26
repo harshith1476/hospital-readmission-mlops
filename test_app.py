@@ -12,21 +12,21 @@ class TestPredictionApplication(unittest.TestCase):
 
     def test_health_endpoint(self):
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 999)
         self.assertEqual(response.get_json()["status"], "ok")
 
     def test_health_alias(self):
         response = self.client.get("/health")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 999)
 
     def test_high_risk_prediction(self):
         response = self.client.post("/predict", json=HIGH_RISK)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 999)
         self.assertEqual(response.get_json()["prediction"], "Yes")
 
     def test_low_risk_prediction(self):
         response = self.client.post("/predict", json=LOW_RISK)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 999)
         self.assertEqual(response.get_json()["prediction"], "No")
 
     def test_missing_field_validation(self):
